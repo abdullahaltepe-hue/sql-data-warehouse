@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: Customer dimension with SCD Type 2 change tracking
+    columns:
+      - name: customer_key
+        description: Surrogate key
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: SAP customer number (business key)
+        tests:
+          - not_null
+      - name: is_current
+        description: Flag indicating the current record version
+
+  - name: dim_date
+    description: Date dimension with fiscal calendar (Oct fiscal year start)
+    columns:
+      - name: date_key
+        description: Surrogate key
+        tests:
+          - not_null
+          - unique
+      - name: calendar_date
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_product
+    description: Product/material dimension with hierarchy
+    columns:
+      - name: product_key
+        description: Surrogate key
+        tests:
+          - not_null
+          - unique
+      - name: material_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_vendor
+    description: Vendor/supplier dimension with regional classification
+    columns:
+      - name: vendor_key
+        tests:
+          - not_null
+          - unique
+      - name: vendor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_sales
+    description: Sales fact table at order line item grain
+    columns:
+      - name: sales_key
+        tests:
+          - not_null
+          - unique
+      - name: customer_key
+        tests:
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+      - name: product_key
+        tests:
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: net_value
+        tests:
+          - not_null
+
+  - name: fct_purchase_orders
+    description: Purchase order fact table at PO line item grain
+    columns:
+      - name: purchase_key
+        tests:
+          - not_null
+          - unique
+      - name: vendor_key
+        tests:
+          - relationships:
+              to: ref('dim_vendor')
+              field: vendor_key

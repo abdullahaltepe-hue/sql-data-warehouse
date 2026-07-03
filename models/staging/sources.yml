@@ -1,0 +1,69 @@
+version: 2
+
+sources:
+  - name: sap
+    description: SAP ECC/S4HANA source tables extracted via RFC/ODP
+    database: raw
+    schema: sap_extracts
+    loader: SAP Data Services
+    loaded_at_field: _loaded_at
+
+    tables:
+      - name: kna1
+        description: Customer master - general data
+        columns:
+          - name: kunnr
+            description: Customer number (primary key)
+            tests:
+              - not_null
+              - unique
+
+      - name: mara
+        description: Material master - general data
+        columns:
+          - name: matnr
+            description: Material number (primary key)
+            tests:
+              - not_null
+              - unique
+
+      - name: vbak
+        description: Sales document header
+        columns:
+          - name: vbeln
+            description: Sales document number
+            tests:
+              - not_null
+              - unique
+
+      - name: vbap
+        description: Sales document item
+        columns:
+          - name: vbeln
+            description: Sales document number (FK to vbak)
+            tests:
+              - not_null
+
+      - name: lfa1
+        description: Vendor master - general data
+        columns:
+          - name: lifnr
+            description: Vendor number (primary key)
+            tests:
+              - not_null
+              - unique
+
+      - name: ekko
+        description: Purchasing document header
+        columns:
+          - name: ebeln
+            description: Purchasing document number
+            tests:
+              - not_null
+              - unique
+
+      - name: ekpo
+        description: Purchasing document item
+
+      - name: mseg
+        description: Material document segment (inventory movements)

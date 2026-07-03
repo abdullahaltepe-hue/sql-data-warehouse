@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: stg_sap_customers
+    description: Cleaned and typed customer master data from SAP KNA1
+    columns:
+      - name: customer_id
+        description: SAP customer number
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        tests:
+          - not_null
+      - name: country_code
+        tests:
+          - not_null
+
+  - name: stg_sap_materials
+    description: Cleaned material master data from SAP MARA
+    columns:
+      - name: material_id
+        description: SAP material number
+        tests:
+          - not_null
+          - unique
+      - name: material_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['FERT', 'HALB', 'ROH', 'HIBE', 'DIEN', 'NLAG']
+
+  - name: stg_sap_sales
+    description: Sales order line items joined from VBAK/VBAP
+    columns:
+      - name: sales_order_id
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: net_value
+        tests:
+          - not_null
+
+  - name: stg_sap_vendors
+    description: Vendor master data from SAP LFA1
+    columns:
+      - name: vendor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_sap_purchase_orders
+    description: Purchase order line items from EKKO/EKPO
+    columns:
+      - name: po_number
+        tests:
+          - not_null
